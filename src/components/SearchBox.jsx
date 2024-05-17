@@ -5,13 +5,14 @@ function SearchBox() {
   const [city, setCity] = useState("");
   const [temp, setTemp] = useState();
   const inputCity = useRef(null);
+  const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
   useEffect(() => {
     console.log("API HIT");
     if (city) {
       axios
         .get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=ca872e9f2fe655d0497cddba27c83869`
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
         )
         .then((res) => {
           console.log(res.data);
