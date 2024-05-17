@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-
+import "./searchBox.css";
 function SearchBox() {
   const [city, setCity] = useState("");
   const [temp, setTemp] = useState();
+  const [main, setMain] = useState();
+  const [description, setDescription] = useState();
+  const [humidity, setHumidity] = useState();
+
   const inputCity = useRef(null);
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
@@ -17,6 +21,9 @@ function SearchBox() {
         .then((res) => {
           console.log(res.data);
           setTemp(res.data.main.temp);
+          setMain(res.data.weather[0].main);
+          setDescription(res.data.weather[0].description);
+          setHumidity(res.data.main.humidity);
         })
         .catch((error) => {
           console.error("Error Fetching city ", error);
@@ -28,17 +35,38 @@ function SearchBox() {
     inputCity.current.value = "";
   }
   return (
-    <div>
-      <div>
-        <input type="text" placeholder="Enter City" ref={inputCity} />
+    <div id="weather-card">
+      <div id="card">
+        <input
+          type="text"
+          id="search-box"
+          placeholder="Enter City"
+          ref={inputCity}
+        />
 
-        <button onClick={handleOnClick}>Search</button>
-        <div
-          style={{
-            color: "red",
-          }}
-        >
-          Temp is:{temp}°C
+        <button id="search-button" onClick={handleOnClick}>
+          Search
+        </button>
+        <div id="weather-data">
+          <div id="weather-card-item">
+            <div id="weather-title">Temperature:</div>
+            <div id="weather-value">{temp}</div>
+          </div>
+
+          <div className="weather-card-item">
+            <div id="weather-title">Main:</div>
+            <div id="weather-value">{main}</div>
+          </div>
+
+          <div className="weather-card-item">
+            <div id="weather-title">Description:</div>
+            <div id="weather-value">{description}</div>
+          </div>
+
+          <div className="weather-card-item">
+            <div id="weather-title">Humidity:</div>
+            <div id="weather-value">{humidity}</div>
+          </div>
         </div>
       </div>
     </div>
