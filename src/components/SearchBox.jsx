@@ -1,39 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./searchBox.css";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { WeatherAtomFamily } from "../store/atoms";
 function SearchBox() {
   const [city, setCity] = useState("");
-  const [temp, setTemp] = useState();
-  const [main, setMain] = useState();
-  const [description, setDescription] = useState();
-  const [humidity, setHumidity] = useState();
 
   const inputCity = useRef(null);
-  const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+  const weatherData = useRecoilValue(WeatherAtomFamily(city))
 
-  useEffect(() => {
-    console.log("API HIT");
-    if (city) {
-      axios
-        .get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
-        )
-        .then((res) => {
-          console.log(res.data);
-          setTemp(res.data.main.temp);
-          setMain(res.data.weather[0].main);
-          setDescription(res.data.weather[0].description);
-          setHumidity(res.data.main.humidity);
-        })
-        .catch((error) => {
-          console.error("Error Fetching city ", error);
-        });
-    }
-  }, [city]);
   function handleOnClick() {
     setCity(inputCity.current.value);
     inputCity.current.value = "";
   }
+
   return (
     <div id="weather-card">
       <div id="card">
@@ -48,24 +28,25 @@ function SearchBox() {
           Search
         </button>
         <div id="weather-data">
+
           <div id="weather-card-item">
             <div id="weather-title">Temperature:</div>
-            <div id="weather-value">{temp}</div>
+            <div id="weather-value">{weatherData?.main.temp}</div>
           </div>
 
           <div className="weather-card-item">
             <div id="weather-title">Main:</div>
-            <div id="weather-value">{main}</div>
+            <div id="weather-value">{weatherData?.weather[0].main}</div>
           </div>
 
           <div className="weather-card-item">
             <div id="weather-title">Description:</div>
-            <div id="weather-value">{description}</div>
+            <div id="weather-value">{weatherData?.weather[0].description}</div>
           </div>
 
           <div className="weather-card-item">
             <div id="weather-title">Humidity:</div>
-            <div id="weather-value">{humidity}</div>
+            <div id="weather-value">{weatherData?.main.humidity}</div>
           </div>
         </div>
       </div>
